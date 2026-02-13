@@ -1,0 +1,15 @@
+{
+  "name": "Silvester Está Alone",
+  "short_name": "Silvester",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#a855f7",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
