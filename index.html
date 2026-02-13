@@ -62,14 +62,15 @@
     </header>
 
     <nav>
-        <button id="btn-bulario" class="active-bulario" onclick="mudarAba('bulario')"> BULÁRIO</button>
-        <button id="btn-calculadora" onclick="mudarAba('calculadora')"> CALC.</button>
-        <button id="btn-premium" onclick="mudarAba('premium')"> PROTOC.</button>
+        <button id="btn-bulario" class="active-bulario" onclick="mudarAba('bulario')">BULÁRIO</button>
+        <button id="btn-calculadora" onclick="mudarAba('calculadora')">CALC</button>
+        <button id="btn-premium" onclick="mudarAba('premium')">PROTOCOLOS</button>
     </nav>
+
 
     <!-- ABA 1: BULÁRIO (ROXO) -->
     <main id="bulario" class="tab-content active-content">
-        <input type="text" id="busca" oninput="filtrarBulario()" placeholder="🔍 Buscar Animal ou Fármaco...">
+        <input type="text" id="busca" oninput="filtrarBulario()" placeholder="Buscar Animal ou Fármaco...">
         <div id="lista-bulario"></div>
     </main>
 
