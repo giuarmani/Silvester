@@ -758,65 +758,69 @@
         ];
 
            
-     function renderizarBulario(dados) {
-        const container = document.getElementById('lista-bulario');
-        container.innerHTML = dados.map((m, index) => `
-            <div class="card-dark p-5 rounded-[24px] border-l-[10px] border-purple-500 shadow-xl">
-                <div class="flex justify-between items-start">
-                    <h3 class="text-xl font-black text-purple-400 uppercase italic leading-tight">${m["Medicação"]}</h3>
-                    <span class="text-[9px] bg-purple-900/40 text-purple-200 px-2 py-1 rounded font-bold self-start">${m["Animal"]}</span>
+    function renderizarBulario(dados) {
+    const container = document.getElementById('lista-bulario');
+    container.innerHTML = dados.map((m, index) => `
+        <div class="card-dark p-5 rounded-[24px] border-l-[10px] border-purple-500 shadow-xl">
+            <div class="flex justify-between items-start">
+                <h3 class="text-xl font-black text-purple-400 uppercase italic leading-tight">${m["Medicação"]}</h3>
+                <span class="text-[9px] bg-purple-900/40 text-purple-200 px-2 py-1 rounded font-bold self-start">${m["Animal"]}</span>
+            </div>
+            <div class="mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest border-b border-slate-700/50 pb-2">
+                ${m["Uso"] || 'Geral'} • <span class="text-slate-500 capitalize">${m["Notas"] || ''}</span>
+            </div>
+            
+            <!-- EXIBIÇÃO DA DOSE RECOMENDADA -->
+            <p class="text-[10px] text-purple-300/80 font-bold mt-2 uppercase tracking-tight">
+                Dose: ${m.doseMax ? m.doseMin + ' - ' + m.doseMax : m.doseMin} mg/kg
+            </p>
+
+            <div class="mt-4 grid grid-cols-2 gap-3">
+                <div class="col-span-2">
+                     <label class="text-[9px] text-slate-500 font-black uppercase ml-1">Peso do Animal (g)</label>
+                     <input type="number" id="peso-${index}" onkeyup="calcAuto(${index})" placeholder="Ex: 500" 
+                            class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
                 </div>
-                <div class="mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest border-b border-slate-700/50 pb-2">
-                    ${m["Uso"] || 'Geral'} • <span class="text-slate-500 capitalize">${m["Notas"] || ''}</span>
+                <div>
+                     <label class="text-[9px] text-purple-300 font-black uppercase ml-1">Conc. (mg/ml)</label>
+                     <input type="number" id="conc-${index}" value="${m.conc || ''}" onkeyup="calcAuto(${index})" placeholder="Ex: 5" 
+                            class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
                 </div>
-                
-                <div class="mt-5 grid grid-cols-2 gap-3">
-                    <div class="col-span-2">
-                         <label class="text-[9px] text-slate-500 font-black uppercase ml-1">Peso do Animal (g)</label>
-                         <input type="number" id="peso-${index}" onkeyup="calcAuto(${index})" placeholder="0" 
-                                class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
-                    </div>
-                    <!-- NOVO CAMPO DINÂMICO DE CONCENTRAÇÃO -->
-                    <div>
-                         <label class="text-[9px] text-purple-300 font-black uppercase ml-1">Conc. (mg/ml)</label>
-                         <input type="number" id="conc-${index}" value="${m.conc || ''}" onkeyup="calcAuto(${index})" placeholder="Ex: 5" 
-                                class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
-                    </div>
-                    <div class="bg-purple-600/20 p-2 rounded-2xl border border-purple-500/30 text-center flex flex-col justify-center">
-                        <span class="text-[8px] text-purple-400 font-black uppercase">Volume (ml)</span>
-                        <span id="res-${index}" class="text-md font-black text-white leading-tight">0.000</span>
-                    </div>
+                <div class="bg-purple-600/20 p-2 rounded-2xl border border-purple-500/30 text-center flex flex-col justify-center">
+                    <span class="text-[8px] text-purple-400 font-black uppercase">Volume (ml)</span>
+                    <span id="res-${index}" class="text-md font-black text-white leading-tight">0.000</span>
                 </div>
             </div>
-        `).join('');
-        lucide.createIcons();
-    }
+        </div>
+    `).join('');
+    lucide.createIcons();
+}
 
-    function calcAuto(index) {
-        // Importante: Pegar a lista correta caso haja filtro
-        const termo = document.getElementById('busca').value.toLowerCase();
-        const listaAtual = termo ? minhaPlanilha.filter(m => 
-            m["Animal"].toLowerCase().includes(termo) || 
-            m["Medicação"].toLowerCase().includes(termo)
-        ) : minhaPlanilha;
-        
-        const item = listaAtual[index];
-        const peso = document.getElementById(`peso-${index}`).value / 1000;
-        const conc = document.getElementById(`conc-${index}`).value; // Lê o novo campo dinâmico
-        const resDisplay = document.getElementById(`res-${index}`);
+function calcAuto(index) {
+    const termo = document.getElementById('busca').value.toLowerCase();
+    const listaAtual = termo ? minhaPlanilha.filter(m => 
+        m["Animal"].toLowerCase().includes(t) || m["Medicação"].toLowerCase().includes(t)
+    ) : minhaPlanilha;
+    
+    const item = listaAtual[index];
+    // CONVERSÃO DE GRAMAS PARA KG (/1000)
+    const peso = document.getElementById(`peso-${index}`).value / 1000;
+    const conc = document.getElementById(`conc-${index}`).value;
+    const resDisplay = document.getElementById(`res-${index}`);
 
-        if (peso > 0 && conc > 0) {
-            let resMin = (peso * item.doseMin) / conc;
-            if (item.doseMax) {
-                let resMax = (peso * item.doseMax) / conc;
-                resDisplay.innerText = resMin.toFixed(3) + " - " + resMax.toFixed(3);
-            } else {
-                resDisplay.innerText = resMin.toFixed(3);
-            }
+    if (peso > 0 && conc > 0) {
+        let resMin = (peso * item.doseMin) / conc;
+        if (item.doseMax) {
+            let resMax = (peso * item.doseMax) / conc;
+            resDisplay.innerText = resMin.toFixed(3) + " - " + resMax.toFixed(3);
         } else {
-            resDisplay.innerText = "0.000";
+            resDisplay.innerText = resMin.toFixed(3);
         }
+    } else {
+        resDisplay.innerText = "0.000";
     }
+}
+
 
     function filtrarBulario() {
         const t = document.getElementById('busca').value.toLowerCase();
