@@ -1,14 +1,34 @@
-function filtrarBulario() {
-    try {
-        const termo = document.getElementById('busca').value.toLowerCase();
-        // O filtro agora é à prova de erros
-        const filtrados = minhaPlanilha.filter(m => {
-            const animal = m["Animal"] ? m["Animal"].toLowerCase() : "";
-            const med = m["Medicação"] ? m["Medicação"].toLowerCase() : "";
-            return animal.includes(termo) || med.includes(termo);
-        });
-        renderizarBulario(filtrados);
-    } catch (e) {
-        console.log("Erro na busca, mas o app continua vivo!");
-    }
-}
+const CACHE_NAME = 'silvester-v10';
+const assets = [
+  './',
+  './index.html',
+  './manifest.json' // Adicionei o manifest para o ícone aparecer
+];
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(assets);
+    })
+  );
+  self.skipWaiting(); // Força a instalação imediata
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim(); // Assume o controle do app na hora
+});
+
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(response => {
+      return response || fetch(e.request);
+    })
+  );
+});
