@@ -873,9 +873,17 @@ function renderizarBulario(dados) {
 
         renderizarBulario(minhaPlanilha);
 
+               renderizarBulario(minhaPlanilha);
+
+        // --- REGISTRO QUE VOCÊ SABE QUE FUNCIONA ---
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').then(() => console.log("Offline Ativado"));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log("Porteiro Offline Ativo!"))
+                    .catch(err => console.log("Erro ao registrar:", err));
+            });
         }
     </script>
 </body>
 </html>
+
