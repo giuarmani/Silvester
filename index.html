@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
     <title>Silvester Está Alone</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com"></script>
@@ -830,10 +831,6 @@ function calcAuto(index) {
     }
 }
 
-       
-   
-
-
     function filtrarBulario() {
         const t = document.getElementById('busca').value.toLowerCase();
         const f = minhaPlanilha.filter(m => 
@@ -863,6 +860,12 @@ function calcAuto(index) {
 
     lucide.createIcons();
     renderizarBulario(minhaPlanilha);
+        
+    if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => console.log("Silvester está Offline!"));
+}
+
          </script>
 </body>
 </html>
