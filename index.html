@@ -775,8 +775,8 @@
 
             <div class="mt-4 grid grid-cols-2 gap-3">
                 <div class="col-span-2">
-                     <label class="text-[9px] text-slate-500 font-black uppercase ml-1">Peso do Animal (g)</label>
-                     <input type="number" id="peso-${index}" oninput="calcAuto(${index})" placeholder="Ex: 500" 
+                     <label class="text-[9px] text-slate-500 font-black uppercase ml-1">Peso do Animal (kg)</label>
+                     <input type="number" step="0.001" id="peso-${index}" oninput="calcAuto(${index})" placeholder="Ex: 0.300 ou 400" 
                             class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
                 </div>
                 <div>
@@ -796,20 +796,18 @@
 
 function calcAuto(index) {
     const termo = document.getElementById('busca').value.toLowerCase();
-    
-    // CORREÇÃO: Usando a variável 'termo' corretamente para filtrar
     const listaAtual = termo ? minhaPlanilha.filter(m => 
         m["Animal"].toLowerCase().includes(termo) || 
         m["Medicação"].toLowerCase().includes(termo)
     ) : minhaPlanilha;
     
     const item = listaAtual[index];
-    const pesoInput = document.getElementById(`peso-${index}`).value;
+    const pesoKg = document.getElementById(`peso-${index}`).value; // Valor direto em Kg
     const concInput = document.getElementById(`conc-${index}`).value;
     const resDisplay = document.getElementById(`res-${index}`);
 
-    if (pesoInput > 0 && concInput > 0) {
-        const pesoKg = pesoInput / 1000;
+    if (pesoKg > 0 && concInput > 0) {
+        // Cálculo direto: (Kg * dose) / conc
         let resMin = (pesoKg * item.doseMin) / concInput;
         
         if (item.doseMax) {
@@ -822,6 +820,7 @@ function calcAuto(index) {
         resDisplay.innerText = "0.000";
     }
 }
+
        
    
 
