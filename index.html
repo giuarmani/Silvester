@@ -757,7 +757,6 @@
            
         ];
 
-           
     function renderizarBulario(dados) {
     const container = document.getElementById('lista-bulario');
     container.innerHTML = dados.map((m, index) => `
@@ -770,20 +769,19 @@
                 ${m["Uso"] || 'Geral'} • <span class="text-slate-500 capitalize">${m["Notas"] || ''}</span>
             </div>
             
-            <!-- EXIBIÇÃO DA DOSE RECOMENDADA -->
             <p class="text-[10px] text-purple-300/80 font-bold mt-2 uppercase tracking-tight">
-                Dose: ${m.doseMax ? m.doseMin + ' - ' + m.doseMax : m.doseMin} mg/kg
+                Dose Ref: ${m.doseMax ? m.doseMin + ' - ' + m.doseMax : m.doseMin} mg/kg
             </p>
 
             <div class="mt-4 grid grid-cols-2 gap-3">
                 <div class="col-span-2">
                      <label class="text-[9px] text-slate-500 font-black uppercase ml-1">Peso do Animal (g)</label>
-                     <input type="number" id="peso-${index}" onkeyup="calcAuto(${index})" placeholder="Ex: 500" 
+                     <input type="number" id="peso-${index}" oninput="calcAuto(${index})" placeholder="Ex: 500" 
                             class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
                 </div>
                 <div>
                      <label class="text-[9px] text-purple-300 font-black uppercase ml-1">Conc. (mg/ml)</label>
-                     <input type="number" id="conc-${index}" value="${m.conc || ''}" onkeyup="calcAuto(${index})" placeholder="Ex: 5" 
+                     <input type="number" id="conc-${index}" value="${m.conc || ''}" oninput="calcAuto(${index})" placeholder="Ex: 5" 
                             class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
                 </div>
                 <div class="bg-purple-600/20 p-2 rounded-2xl border border-purple-500/30 text-center flex flex-col justify-center">
@@ -798,20 +796,24 @@
 
 function calcAuto(index) {
     const termo = document.getElementById('busca').value.toLowerCase();
+    
+    // CORREÇÃO: Usando a variável 'termo' corretamente para filtrar
     const listaAtual = termo ? minhaPlanilha.filter(m => 
-        m["Animal"].toLowerCase().includes(t) || m["Medicação"].toLowerCase().includes(t)
+        m["Animal"].toLowerCase().includes(termo) || 
+        m["Medicação"].toLowerCase().includes(termo)
     ) : minhaPlanilha;
     
     const item = listaAtual[index];
-    // CONVERSÃO DE GRAMAS PARA KG (/1000)
-    const peso = document.getElementById(`peso-${index}`).value / 1000;
-    const conc = document.getElementById(`conc-${index}`).value;
+    const pesoInput = document.getElementById(`peso-${index}`).value;
+    const concInput = document.getElementById(`conc-${index}`).value;
     const resDisplay = document.getElementById(`res-${index}`);
 
-    if (peso > 0 && conc > 0) {
-        let resMin = (peso * item.doseMin) / conc;
+    if (pesoInput > 0 && concInput > 0) {
+        const pesoKg = pesoInput / 1000;
+        let resMin = (pesoKg * item.doseMin) / concInput;
+        
         if (item.doseMax) {
-            let resMax = (peso * item.doseMax) / conc;
+            let resMax = (pesoKg * item.doseMax) / concInput;
             resDisplay.innerText = resMin.toFixed(3) + " - " + resMax.toFixed(3);
         } else {
             resDisplay.innerText = resMin.toFixed(3);
@@ -820,6 +822,8 @@ function calcAuto(index) {
         resDisplay.innerText = "0.000";
     }
 }
+       
+   
 
 
     function filtrarBulario() {
