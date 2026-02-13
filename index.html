@@ -827,20 +827,33 @@ function renderizarBulario(dados) {
             `).join('');
         }
 
-        function calc(i) {
-            const item = listaAtual[i];
-            const p = document.getElementById(`p-${i}`).value;
-            const c = document.getElementById(`c-${i}`).value;
-            const res = document.getElementById(`r-${i}`);
-            if (p > 0 && c > 0) {
-                let m = (p * item.doseMin) / c;
-                res.innerText = item.doseMax ? m.toFixed(3) + '-' + ((p * item.doseMax)/c).toFixed(3) : m.toFixed(3);
-                res.style.color = "#a855f7";
-            } else { 
-                res.innerText = "0.000"; 
-                res.style.color = "white";
-            }
+       function calc(i) {
+    // 1. Garantimos que estamos pegando o item correto da lista que está na tela
+    const item = listaAtual[i];
+    
+    // 2. Convertemos os valores dos inputs para números reais
+    const p = parseFloat(document.getElementById(`p-${i}`).value);
+    const c = parseFloat(document.getElementById(`c-${i}`).value);
+    const res = document.getElementById(`r-${i}`);
+
+    if (p > 0 && c > 0) {
+        // Cálculo da dose mínima
+        let mMin = (p * item.doseMin) / c;
+        
+        // Verificamos se existe dose máxima para evitar o erro "escandaloso"
+        if (item.doseMax && item.doseMax > 0) {
+            let mMax = (p * item.doseMax) / c;
+            res.innerText = mMin.toFixed(3) + " - " + mMax.toFixed(3);
+        } else {
+            res.innerText = mMin.toFixed(3);
         }
+        res.style.color = "#a855f7"; // Roxo do resultado
+    } else { 
+        res.innerText = "0.000"; 
+        res.style.color = "white";
+    }
+}
+
 
         function filtrarBulario() {
             const t = document.getElementById('busca').value.toLowerCase();
