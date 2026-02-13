@@ -7,10 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com"></script>
     <style>
-        body { background-color: #0f172a; color: #f8fafc; }
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
         .tab-content { display: none; }
         .active-content { display: block; }
-        /* Cores das Abas */
         .tab-bulario.active-tab { border-bottom: 4px solid #a855f7; color: #a855f7; }
         .tab-calc.active-tab { border-bottom: 4px solid #f97316; color: #f97316; }
         .tab-prot.active-tab { border-bottom: 4px solid #94a3b8; color: #94a3b8; }
@@ -19,135 +18,836 @@
 </head>
 <body class="pb-10">
 
-     <header class="pt-6 pb-2 bg-[#0f172a] text-center">
+    <header class="pt-6 pb-2 bg-[#0f172a] text-center">
         <h1 class="text-2xl font-black tracking-tighter text-white uppercase italic">
             Silvester <span class="text-emerald-500">Está</span> Alone
         </h1>
         <p class="text-[10px] text-slate-500 font-bold tracking-widest uppercase mt-1">Veterinary Offline Support</p>
     </header>
 
-    <!-- NAVEGAÇÃO SUPERIOR -->
-    <nav class="sticky top-0 z-50 bg-[#0f172a] border-b border-slate-800 flex justify-around">
-        <button onclick="mudarAba('bulario')" class="tab-bulario active-tab py-4 px-2 text-sm font-bold flex flex-col items-center gap-1 flex-1" id="btn-bulario">
+    <nav class="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-sm border-b border-slate-800 flex justify-around">
+        <button onclick="mudarAba('bulario')" class="tab-bulario active-tab py-4 px-2 text-[11px] font-black flex flex-col items-center gap-1 flex-1" id="btn-bulario">
             <i data-lucide="book-open" class="w-5 h-5"></i> BULÁRIO
         </button>
-        <button onclick="mudarAba('calculadora')" class="tab-calc py-4 px-2 text-sm font-bold flex flex-col items-center gap-1 flex-1" id="btn-calculadora">
+        <button onclick="mudarAba('calculadora')" class="tab-calc py-4 px-2 text-[11px] font-black flex flex-col items-center gap-1 flex-1" id="btn-calculadora">
             <i data-lucide="calculator" class="w-5 h-5"></i> CALC
         </button>
-        <button onclick="mudarAba('premium')" class="tab-prot py-4 px-2 text-sm font-bold flex flex-col items-center gap-1 flex-1" id="btn-premium">
+        <button onclick="mudarAba('premium')" class="tab-prot py-4 px-2 text-[11px] font-black flex flex-col items-center gap-1 flex-1" id="btn-premium">
             <i data-lucide="lock" class="w-5 h-5"></i> PROTOCOLOS
         </button>
     </nav>
 
-    <!-- ABA 1: BULÁRIO (ROXO) -->
     <main id="bulario" class="tab-content active-content p-4">
         <div class="mb-6">
-            <input type="text" id="busca" onkeyup="filtrarBulario()" placeholder="Pesquisar fármaco..." 
-                   class="w-full p-4 rounded-xl bg-slate-800 border border-purple-500/30 text-white outline-none focus:ring-2 focus:ring-purple-500">
+            <div class="relative">
+                <i data-lucide="search" class="absolute left-4 top-4 w-5 h-5 text-slate-500"></i>
+                <input type="text" id="busca" onkeyup="filtrarBulario()" placeholder="Animal ou Fármaco..." 
+                       class="w-full p-4 pl-12 rounded-2xl bg-slate-800 border border-purple-500/20 text-white outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
         </div>
-        <div id="lista-bulario" class="space-y-4">
-            <!-- Gerado via JS -->
-        </div>
+        <div id="lista-bulario" class="space-y-4"></div>
     </main>
 
-    <!-- ABA 2: CALCULADORA GERAL (LARANJA) -->
     <main id="calculadora" class="tab-content p-4">
-        <div class="card-dark p-6 rounded-2xl border-t-4 border-t-orange-500">
-            <h2 class="text-orange-500 font-bold mb-4 flex items-center gap-2 uppercase tracking-wider">
-                <i data-lucide="layers"></i> Cálculo Livre
+        <div class="card-dark p-6 rounded-3xl border-t-8 border-t-orange-500 shadow-xl">
+            <h2 class="text-orange-500 font-black mb-6 flex items-center gap-2 uppercase text-xl">
+                <i data-lucide="zap"></i> Cálculo Livre
             </h2>
-            <div class="space-y-4">
-                <input type="number" id="pesoG" placeholder="Peso do Animal (g)" class="w-full p-4 rounded-lg bg-slate-900 border border-slate-700">
-                <input type="number" id="doseG" placeholder="Dose (mg/kg)" class="w-full p-4 rounded-lg bg-slate-900 border border-slate-700">
-                <input type="number" id="concG" placeholder="Concentração (mg/ml)" class="w-full p-4 rounded-lg bg-slate-900 border border-slate-700">
-                <button onclick="calcGeral()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-black py-5 rounded-xl transition-all shadow-lg shadow-orange-900/20">
-                    CALCULAR AGORA
-                </button>
-                <div id="resGeral" class="text-center text-3xl font-mono text-orange-400 mt-4"></div>
+            <div class="space-y-5">
+                <input type="number" id="pesoG" placeholder="Peso (g)" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none">
+                <input type="number" id="doseG" placeholder="Dose (mg/kg)" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none">
+                <input type="number" id="concG" placeholder="Conc. Frasco (mg/ml)" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 outline-none">
+                <button onclick="calcGeral()" class="w-full bg-orange-600 text-white font-black py-5 rounded-2xl active:scale-95 transition-all">CALCULAR</button>
+                <div id="resGeralCont" class="hidden mt-6 p-6 bg-slate-900 rounded-2xl border border-orange-500/30 text-center">
+                    <span id="resGeral" class="text-4xl font-black text-white">0.000</span><span class="text-orange-500 font-bold ml-1 text-xl">ml</span>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- ABA 3: PROTOCOLOS (CINZA) -->
     <main id="premium" class="tab-content p-4">
-        <div class="py-20 text-center bg-slate-800/50 rounded-3xl border-2 border-dashed border-slate-700">
-            <i data-lucide="shield-alert" class="w-16 h-16 mx-auto text-slate-500 mb-4"></i>
-            <h2 class="text-xl font-bold text-slate-300">Banco de Dados Customizado</h2>
-            <p class="text-slate-500 mt-2 px-10 text-sm">Desbloqueie para salvar seus próprios protocolos e doses favoritas.</p>
-            <button class="mt-8 bg-slate-600 px-10 py-4 rounded-full font-bold text-white shadow-xl">
-                ASSINAR PREMIUM
-            </button>
+        <div class="py-24 text-center bg-slate-800/30 rounded-[40px] border-2 border-dashed border-slate-700">
+            <i data-lucide="lock" class="w-16 h-16 mx-auto text-slate-600 mb-4"></i>
+            <h2 class="text-xl font-bold text-slate-300 uppercase">Meus Protocolos</h2>
+            <p class="text-slate-500 mt-2 px-10 text-sm">Personalize o app com suas doses favoritas.</p>
         </div>
     </main>
 
     <script>
-        const bulario = [
-            { id: 1, nome: "Enrofloxacina", dose: 10, conc: 50, especie: "Répteis", obs: "A cada 24h" },
-            { id: 2, nome: "Meloxicam", dose: 0.2, conc: 2, especie: "Aves/Répteis", obs: "Anti-inflamatório" },
-            { id: 3, nome: "Cetamina", dose: 30, conc: 100, especie: "Mamíferos", obs: "Contenção" },
-            { id: 4, nome: "Tramadol", dose: 5, conc: 50, especie: "Geral", obs: "Analgesia" }
+        // COLE SUA LISTA DA PLANILHA1 ABAIXO
+        const minhaPlanilha = [
+            {
+      "Animal": "Iguanas e Lagartos",
+      "Medicação": "Diazepan",
+      "Dose/mg/kg": "2,5 IM",
+      "doseMin": 2.5,
+      "Uso": "Anestésico",
+      "Notas": "convulsão/ MPA/ 20 min antes"
+    },
+    {
+      "Animal": "Iguanas e Lagartos",
+      "Medicação": "Diazepan",
+      "Dose/mg/kg": "0,2 - 1 IM",
+      "doseMin": 0.2,
+      "doseMax": 1,      
+      "Uso": "Anestésico",
+      "Notas": "Associado com cetamina"
+    },
+    {
+      "Animal": "Iguanas e Lagartos",
+      "Medicação": "Midazolam",
+      "Dose/mg/kg": "2 IM",
+      "doseMin": 2,
+      "Uso": "Anestésico",
+      "Notas": "Associado com cetamina"
+    },
+    {
+      "Animal": "Iguanas e Lagartos",
+      "Medicação": "Cetamina",
+      "Dose/mg/kg": "30 - 50 IM",
+      "doseMin": 30,
+      "doseMax": 50,
+      "Uso": "Anestésico",
+      "Notas": "Indução e recuperação lenta - associar"
+    },
+    {
+      "Animal": "Iguanas e Lagartos",
+      "Medicação": "Meloxicam",
+      "Dose/mg/kg": "0,2 IM IV",
+      "doseMin": 0.2,
+      "Uso": "Analgésico/Antiiinf.",
+      "Notas": "24h",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Iguanas e Lagartos",
+      "Medicação": "Cetoprofeno",
+      "Dose/mg/kg": "2 IM SC",
+      "doseMin": 2, 
+      "Uso": "Analgésico/Antiiinf.",
+      "Notas": "24h"
+    },
+    {
+      "Animal": "Iguanas e Lagartos",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico/Antiiinf."
+    },
+    {
+      "Animal": "Serpentes",
+      "Medicação": "Acepromazina",
+      "Dose/mg/kg": "0,1 - 0,5 IM",
+      "doseMin": 0.1,
+      "doseMax": 0.5,
+      "Uso": "Anestésico",
+      "Notas": "MPA"
+    },
+    {
+      "Animal": "Serpentes",
+      "Medicação": "Cetamina",
+      "Dose/mg/kg": "60 IM SC IV",
+      "doseMin": 60,
+      "Uso": "Anestésico",
+      "Notas": "Associar "
+    },
+    {
+      "Animal": "Serpentes",
+      "Medicação": "Xilazina",
+      "Dose/mg/kg": "0,1 - 1 IM SC IV",
+      "doseMin": 0.1,
+      "doseMax": 1,
+      "Uso": "Anestésico",
+      "Notas": "Associar "
+    },
+    {
+      "Animal": "Serpentes",
+      "Medicação": "Midazolam",
+      "Uso": "Anestésico",
+      "Notas": "Associar "
+    },
+    {
+      "Animal": "Serpentes",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Serpentes",
+      "Medicação": "Meloxicam",
+      "Uso": "Anestésico",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Serpentes",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório",
+      "Notas": "Traumas"
+    },
+    {
+      "Animal": "Serpentes",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico/Antiiinf."
+    },
+    {
+      "Animal": "Cágado e Jabuti",
+      "Medicação": "Acepromazina",
+      "Dose/mg/kg": "0,25 - 0,5 IM",
+      "doseMin": 0.25,
+      "doseMax": 0.5,
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Cágado e Jabuti",
+      "Medicação": "Cetamina",
+      "Dose/mg/kg": "20 - 60 IM",
+      "doseMin": 20,
+      "doseMax": 60,
+      "Uso": "Anestésico",
+      "Notas": "Recuperação lenta"
+    },
+    {
+      "Animal": "Cágado e Jabuti",
+      "Medicação": "Cetamina + Midazolam",
+      "Dose/mg/kg": "20 - 40c + 2m IM",
+      "Uso": "Anestésico",
+      "Notas": "Boa sedação e relaxamento muscular"
+    },
+    {
+      "Animal": "Cágado e Jabuti",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Cágado e Jabuti",
+      "Medicação": "Cetamina + Diazepam",
+      "Dose/mg/kg": "60 - 80c + 0,2 - 1d IM",
+      "Uso": "Anestésico",
+      "Notas": "Bom relaxamento muscular"
+    },
+    {
+      "Animal": "Cágado e Jabuti",
+      "Medicação": "Lidocaína",
+      "Dose/mg/kg": "0,5 ou 2%",
+      "doseMin": 0.5,
+      "Uso": "Anestésico",
+      "Notas": "Local"
+    },
+    {
+      "Animal": "Cágado e Jabuti",
+      "Medicação": "Meloxicam",
+      "Dose/mg/kg": "0,1 - 0,2 IM",
+      "doseMin": 0.1,
+      "doseMax": 0.2,
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Cágado e Jabuti",
+      "Medicação": "Dexametasona",
+      "Dose/mg/kg": "2 -4 IM IV",
+      "doseMin": 2,
+      "doseMax": 4,
+      "Uso": "Antiinflamatório",
+      "Notas": "Traumas, choque"
+    },
+    {
+      "Animal": "Gambá e Cuica",
+      "Medicação": "Acepromazina",
+      "Dose/mg/kg": "0,1 - 0,5 VO SC",
+      "doseMin": 0.1,
+      "doseMax": 0.5,
+      "Uso": "Anestésico",
+      "Notas": "Tranquilizante"
+    },
+    {
+      "Animal": "Gambá e Cuica",
+      "Medicação": "Dexametasona",
+      "Dose/mg/kg": "0,2 IM IV SC",
+      "doseMin": 0.2,
+      "Uso": "Antiinflamatório",
+      "Notas": "Dose para choque até 2 mg/kg"
+    },
+    {
+      "Animal": "Gambá e Cuica",
+      "Medicação": "Cetamina",
+      "Dose/mg/kg": "30 - 50 IM",
+      "doseMin": 30,
+      "doseMax": 50,
+      "Uso": "Anestésico",
+      "Notas": "Associar "
+    },
+    {
+      "Animal": "Gambá e Cuica",
+      "Medicação": "Meloxicam",
+      "Dose/mg/kg": "0,1 - 0,2 VO SC",
+      "doseMin": 0.1, 
+      "doseMax":0.2,  
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Gambá e Cuica",
+      "Medicação": "Midazolam",
+      "Dose/mg/kg": "0,5 - 1 IM",
+      "doseMin": 0.5,
+      "doseMax": 1,
+      "Uso": "Anestésico",
+      "Notas": "Associar "
+    },
+    {
+      "Animal": "Gambá e Cuica",
+      "Medicação": "Tramadol",
+      "Dose/mg/kg": "2 - 6 IM SC VO",
+      "doseMin": 2,
+      "doseMax": 6,
+      "Uso": "Analgésico ",
+      "Notas": "Associar com dipirona"
+    },
+    {
+      "Animal": "Gambá e Cuica",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Tamanduás e Tatus",
+      "Medicação": "Cetamina + Midazolam",
+      "Dose/mg/kg": "5 - 10c + 0,2m IM",
+      "Uso": "Anestésico",
+      "Notas": "Procedimentos rápidos - Tem reversor - Flumazenil 0,01 - 0,02"
+    },
+    {
+      "Animal": "Tamanduás e Tatus",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Tamanduás e Tatus",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Tamanduás e Tatus",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Tamanduás e Tatus",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Acepromazina",
+      "Dose/mg/kg": "0,5 - 1 VO SC IM",
+      "doseMin": 0.5,
+      "doseMax": 1,
+      "Uso": "Anestésico",
+      "Notas": "Tranquilizante"
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Cetamina",
+      "doseMin": 10,
+      "doseMax": 20,
+      "Dose/mg/kg": "10 - 20 IM",
+      "Uso": "Anestésico",
+      "Notas": "Tranquilizante e neuroleptoanalgesia"
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Cetamina + Diazepam",
+      "Dose/mg/kg": "15c - 1d IM",
+      "Uso": "Anestésico",
+      "Notas": "Sedação"
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Diazepam",
+      "Dose/mg/kg": "0,5 - 1 VO IM IV",
+      "doseMin": 0.5,
+      "doseMax": 1,
+      "Uso": "Anestésico",
+      "Notas": "Metade da dose para anticonvulsivante"
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Midazolam",
+      "Dose/mg/kg": "0,1 - 0,5 IM",
+      "doseMin": 0.1,
+      "doseMax": 0.5,
+      "Uso": "Anestésico",
+      "Notas": "Sedação e relaxamento muscular"
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Dexametasona",
+      "Dose/mg/kg": "2 VO IM IV",
+      "doseMin": 2,
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Ibuprofeno",
+      "Dose/mg/kg": "20 VO",
+      "doseMin": 20,
+      "Uso": "Analgésico/Antiiinf."
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Primatas",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Canidae",
+      "Medicação": "Cetamina",
+      "Dose/mg/kg": "7 - 10 IM",
+      "doseMin": 7,
+      "doseMax": 10,
+      "Uso": "Anestésico",
+      "Notas": "Associar com Midazolam"
+    },
+    {
+      "Animal": "Canidae",
+      "Medicação": "Midazolam",
+      "Dose/mg/kg": "0,3 - 0,5 IM",
+      "doseMin": 0.3,
+      "doseMax": 0.5,
+      "Uso": "Anestésico",
+      "Notas": "Associar com Cetamina"
+    },
+    {
+      "Animal": "Canidae",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Canidae",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Canidae",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Canidae",
+      "Medicação": "Lidocaína",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Canidae",
+      "Medicação": "Acepromazina",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Canidae",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Felidae",
+      "Medicação": "Cetamina",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Felidae",
+      "Medicação": "Midazolam",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Felidae",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Felidae",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Felidae",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Felidae",
+      "Medicação": "Lidocaína",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Felidae",
+      "Medicação": "Acepromazina",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Felidae",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Ariranha, Lontra e Irara",
+      "Medicação": "Acepromazina",
+      "Dose/mg/kg": "0,1 - 0,3 IM SC VO",
+       "doseMin": 0.1,
+      "doseMax": 0.3,
+      "Uso": "Anestésico",
+      "Notas": "Tranquilizante"
+    },
+    {
+      "Animal": "Ariranha, Lontra e Irara",
+      "Medicação": "Cetamina",
+      "Dose/mg/kg": "10 - 20 IM ",
+       "doseMin": 10,
+      "doseMax": 20,
+      "Uso": "Anestésico",
+      "Notas": "Usar associado"
+    },
+    {
+      "Animal": "Ariranha, Lontra e Irara",
+      "Medicação": "Cetamina + Acepromazina",
+      "Dose/mg/kg": "10 - 20c + 0,05 - 0,3a IM",
+      "Uso": "Anestésico",
+      "Notas": "Funciona bem quando IM"
+    },
+    {
+      "Animal": "Ariranha, Lontra e Irara",
+      "Medicação": "Cetamina + Midazolam",
+      "Dose/mg/kg": "10c + 0,25m IM",
+      "Uso": "Anestésico",
+      "Notas": "Contenção curta duração - pode ocorrer taquicardia"
+    },
+    {
+      "Animal": "Ariranha, Lontra e Irara",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Ariranha, Lontra e Irara",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Ariranha, Lontra e Irara",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Ariranha, Lontra e Irara",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Quati, Mão Pelada e Jupará",
+      "Medicação": "Cetamina + Midazolam",
+      "Dose/mg/kg": "7c + 0,5 - 1m IM",
+      "Uso": "Anestésico",
+      "Notas": "Captura, manipulação, sedação com retorno calmo"
+    },
+    {
+      "Animal": "Quati, Mão Pelada e Jupará",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Quati, Mão Pelada e Jupará",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Quati, Mão Pelada e Jupará",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Quati, Mão Pelada e Jupará",
+      "Medicação": "Acepromazina",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Quati, Mão Pelada e Jupará",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Antas",
+      "Medicação": "Tiletamina - zolazepam + Cetamina + Atropina + Medetomidina",
+      "Uso": "Anestésico",
+      "Notas": "Protocolo para dardos, em ordem - 1,25 - 0,83tz; 0,62 - 0,41c; 0,025 - 0,04a; 0,006 - 0,004mdt/ Atipemazol para recuperação após 30 min dose de 0,06mg/kg"
+    },
+    {
+      "Animal": "Antas",
+      "Medicação": "Tiletamina - zolazepam",
+      "Dose/mg/kg": "6 IM",
+      "doseMin": 6,
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Antas",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Antas",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Antas",
+      "Medicação": "Butorfanol ",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Queixada, Cateto e Javali",
+      "Medicação": "Cetamina + Midazolam",
+      "Dose/mg/kg": "10 - 30c + 0,3 - 0,5m",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Queixada, Cateto e Javali",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Queixada, Cateto e Javali",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Queixada, Cateto e Javali",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Cervidae",
+      "Medicação": "Cetamina",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Cervidae",
+      "Medicação": "Midazolam",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Cervidae",
+      "Medicação": "Meloxicam",
+      "Uso": "Analgésico/Antiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Cervidae",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Cervidae",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Capivara, Paca, Cutia e Ouriço",
+      "Medicação": "Extrapolação alometrica com domésticos"
+    },
+    {
+      "Animal": "Lebre e Tapiti",
+      "Medicação": "Acepromazina",
+      "Dose/mg/kg": "0,5 - 2 IM SC",
+      "doseMin": 0.5,
+      "doseMax": 2,
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Lebre e Tapiti",
+      "Medicação": "Cetamina + Acepromazina",
+      "Dose/mg/kg": "75 + 5 ou 50 + 1 IM",
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Lebre e Tapiti",
+      "Medicação": "Cetoprofeno",
+      "Dose/mg/kg": "1 - 3 IM SC",
+       "doseMin": 1,
+      "doseMax": 3,
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Lebre e Tapiti",
+      "Medicação": "Meloxicam",
+      "Dose/mg/kg": "0,1 - 0,3 IM SC VO",
+       "doseMin": 0.1,
+      "doseMax": 0.3,
+      "Uso": "Analgésico/Antiiinf.",
+      "Concentração": 2 
+    },
+    {
+      "Animal": "Lebre e Tapiti",
+      "Medicação": "Midazolam",
+      "Dose/mg/kg": "0,5 - 2 IV IM IP Intranasal",
+       "doseMin": 0.5,
+      "doseMax": 2,
+      "Uso": "Anestésico"
+    },
+    {
+      "Animal": "Lebre e Tapiti",
+      "Medicação": "Dipirona",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Lebre e Tapiti",
+      "Medicação": "Tramadol",
+      "Uso": "Analgésico"
+    },
+    {
+      "Animal": "Lebre e Tapiti",
+      "Medicação": "Dexametasona",
+      "Uso": "Antiinflamatório"
+    },
+    {
+      "Animal": "Arara, PEA, Maracanã, Gaviões e geral",
+      "Medicação": "Cetamina",
+      "Dose/mg/kg": "10 - 40 IM SC e intranasal",
+       "doseMin": 10,
+      "doseMax": 40,
+      "Uso": "Anestésico",
+      "Nota": "Associar com midazolam"
+  },
+  {
+    "Animal": "Arara, PEA, Maracanã, Gaviões e geral",
+      "Medicação": "Midazolam",
+      "Dose/mg/kg": "0,1 - 0,4 IM SC e intranasal",
+       "doseMin": 0.1,
+      "doseMax": 0.4,
+      "Uso": "Anestésico",
+      "Nota": "Associar com cetamina"
+  },
+  {
+    "Animal": "Arara, PEA, Maracanã, Gaviões e geral",
+      "Medicação": "Meloxicam",
+      "Dose/mg/kg": "0,5 IM",
+      "doseMin": 0.5,
+      "Uso": "Anestésico",
+      "Nota": "Associar com midazolam",
+      "Concentração": 2   
+  },
+  {
+    "Animal": "Arara, PEA, Maracanã, Gaviões e geral",
+      "Medicação": "Dexametasona",
+      "Dose/mg/kg": "0,2 - 1 IM SC",
+       "doseMin": 0.2,
+      "doseMax": 1,
+      "Uso": "Antiinflamatório",
+      "Nota": "sem notas"
+            }
+           
         ];
 
-        function renderizarBulario(dados) {
-            const container = document.getElementById('lista-bulario');
-            container.innerHTML = dados.map(m => `
-                <div class="card-dark p-5 rounded-2xl border-l-8 border-purple-500 relative overflow-hidden">
-                    <div class="flex justify-between">
-                        <h3 class="text-xl font-black text-purple-400 uppercase italic">${m.nome}</h3>
-                        <span class="text-[10px] text-slate-400 font-bold">${m.especie}</span>
+           
+     function renderizarBulario(dados) {
+        const container = document.getElementById('lista-bulario');
+        container.innerHTML = dados.map((m, index) => `
+            <div class="card-dark p-5 rounded-[24px] border-l-[10px] border-purple-500 shadow-xl">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-xl font-black text-purple-400 uppercase italic leading-tight">${m["Medicação"]}</h3>
+                    <span class="text-[9px] bg-purple-900/40 text-purple-200 px-2 py-1 rounded font-bold self-start">${m["Animal"]}</span>
+                </div>
+                <div class="mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest border-b border-slate-700/50 pb-2">
+                    ${m["Uso"] || 'Geral'} • <span class="text-slate-500 capitalize">${m["Notas"] || ''}</span>
+                </div>
+                
+                <div class="mt-5 grid grid-cols-2 gap-3">
+                    <div class="col-span-2">
+                         <label class="text-[9px] text-slate-500 font-black uppercase ml-1">Peso do Animal (g)</label>
+                         <input type="number" id="peso-${index}" onkeyup="calcAuto(${index})" placeholder="0" 
+                                class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
                     </div>
-                    <p class="text-xs text-slate-500 mt-1">${m.obs} • Sugestão: ${m.dose}mg/kg</p>
-                    
-                    <div class="mt-4 flex gap-2 items-end">
-                        <div class="flex-1">
-                            <label class="text-[10px] text-purple-300 font-bold uppercase">Peso (g)</label>
-                            <input type="number" id="peso-${m.id}" onkeyup="calcCard(${m.id}, ${m.dose}, ${m.conc})" 
-                                   class="w-full p-2 rounded bg-slate-900 border border-slate-700 text-sm">
-                        </div>
-                        <div class="flex-1 bg-purple-900/20 p-2 rounded text-center border border-purple-500/20">
-                            <span class="block text-[8px] text-purple-400 font-bold uppercase">Resultado</span>
-                            <span id="res-${m.id}" class="text-lg font-mono font-bold text-white">0.00</span>
-                            <span class="text-[10px] text-white">ml</span>
-                        </div>
+                    <!-- NOVO CAMPO DINÂMICO DE CONCENTRAÇÃO -->
+                    <div>
+                         <label class="text-[9px] text-purple-300 font-black uppercase ml-1">Conc. (mg/ml)</label>
+                         <input type="number" id="conc-${index}" value="${m.conc || ''}" onkeyup="calcAuto(${index})" placeholder="Ex: 5" 
+                                class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold outline-none focus:border-purple-500">
+                    </div>
+                    <div class="bg-purple-600/20 p-2 rounded-2xl border border-purple-500/30 text-center flex flex-col justify-center">
+                        <span class="text-[8px] text-purple-400 font-black uppercase">Volume (ml)</span>
+                        <span id="res-${index}" class="text-md font-black text-white leading-tight">0.000</span>
                     </div>
                 </div>
-            `).join('');
-        }
-
-        function calcCard(id, dose, conc) {
-            const peso = document.getElementById(`peso-${id}`).value / 1000;
-            if(peso > 0) {
-                const res = (peso * dose) / conc;
-                document.getElementById(`res-${id}`).innerText = res.toFixed(3);
-            }
-        }
-
-        function calcGeral() {
-            const p = document.getElementById('pesoG').value / 1000;
-            const d = document.getElementById('doseG').value;
-            const c = document.getElementById('concG').value;
-            if(p && d && c) {
-                document.getElementById('resGeral').innerText = ((p * d) / c).toFixed(3) + " ml";
-            }
-        }
-
-        function filtrarBulario() {
-            const t = document.getElementById('busca').value.toLowerCase();
-            const f = bulario.filter(m => m.nome.toLowerCase().includes(t) || m.especie.toLowerCase().includes(t));
-            renderizarBulario(f);
-        }
-
-        function mudarAba(aba) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-content'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
-            document.getElementById(aba).classList.add('active-content');
-            document.getElementById('btn-' + aba).classList.add('active-tab');
-            lucide.createIcons();
-        }
-
+            </div>
+        `).join('');
         lucide.createIcons();
-        renderizarBulario(bulario);
-    </script>
+    }
+
+    function calcAuto(index) {
+        // Importante: Pegar a lista correta caso haja filtro
+        const termo = document.getElementById('busca').value.toLowerCase();
+        const listaAtual = termo ? minhaPlanilha.filter(m => 
+            m["Animal"].toLowerCase().includes(termo) || 
+            m["Medicação"].toLowerCase().includes(termo)
+        ) : minhaPlanilha;
+        
+        const item = listaAtual[index];
+        const peso = document.getElementById(`peso-${index}`).value / 1000;
+        const conc = document.getElementById(`conc-${index}`).value; // Lê o novo campo dinâmico
+        const resDisplay = document.getElementById(`res-${index}`);
+
+        if (peso > 0 && conc > 0) {
+            let resMin = (peso * item.doseMin) / conc;
+            if (item.doseMax) {
+                let resMax = (peso * item.doseMax) / conc;
+                resDisplay.innerText = resMin.toFixed(3) + " - " + resMax.toFixed(3);
+            } else {
+                resDisplay.innerText = resMin.toFixed(3);
+            }
+        } else {
+            resDisplay.innerText = "0.000";
+        }
+    }
+
+    function filtrarBulario() {
+        const t = document.getElementById('busca').value.toLowerCase();
+        const f = minhaPlanilha.filter(m => 
+            m["Animal"].toLowerCase().includes(t) || 
+            m["Medicação"].toLowerCase().includes(t)
+        );
+        renderizarBulario(f);
+    }
+
+    function mudarAba(aba) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-content'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
+        document.getElementById(aba).classList.add('active-content');
+        document.getElementById('btn-' + aba).classList.add('active-tab');
+        lucide.createIcons();
+    }
+
+    function calcGeral() {
+        const p = document.getElementById('pesoG').value / 1000;
+        const d = document.getElementById('doseG').value;
+        const c = document.getElementById('concG').value;
+        if(p && d && c) {
+            document.getElementById('resGeralCont').classList.remove('hidden');
+            document.getElementById('resGeral').innerText = ((p * d) / c).toFixed(3);
+        }
+    }
+
+    lucide.createIcons();
+    renderizarBulario(minhaPlanilha);
+         </script>
 </body>
 </html>
 
